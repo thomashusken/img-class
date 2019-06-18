@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Upload{% endblock %}
+{% block current %}(current){% endblock %}
+{% block content %}
+    <h1 class="mt-5">Upload</h1>
+      <p class="lead">Upload your file here</p>
+      <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="data" id="data" />
+        <input type="submit" value="Submit" />
+      </form>
+    <h1 class="mt-3">Results</h1>
+    {% if result %}
+          <p>show result</p>
+    {% else %}
+          <p>After you upload a file, your results will be shown here.</p>
+    {% endif %}
+{% endblock %}
