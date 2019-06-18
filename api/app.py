@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
 
 def create_app():
@@ -16,8 +16,10 @@ def test():
 def index():
     return render_template('index.html')
 
-@app.route('/upload/')
+@app.route('/upload/', methods=['GET', 'POST'])
 def upload():
+    if request.method == 'POST':
+        data = request.files['data'].read().decode('utf-8')
     return render_template('upload.html')
 
 @app.route('/about/')
