@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, send_file
 from flask_bootstrap import Bootstrap
-from .etl import ImageParser
-from .model import return_top_5
+from etl import ImageParser
+from model import return_top_5
 from torchvision import transforms
 import io
 import base64
