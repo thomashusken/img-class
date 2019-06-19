@@ -9,9 +9,15 @@
         <input type="submit" value="Submit" />
       </form>
     <h1 class="mt-3">Results</h1>
-    {% if result %}
-          <p>show result</p>
+    {% if prediction %}
+        <h2 class="mt-3">Image</h2>
+        <img src="data:image/png;base64,{{return_image|safe}}", height="400", width="400">
+
+<!--        <p>{{ return_image }}</p>-->
+        <h2 class="mt-3">Prediction</h2>
+        <p>{{ prediction }}</p>
     {% else %}
-          <p>After you upload a file, your results will be shown here.</p>
+    <p>After you upload a file, your results will be shown here.</p>
     {% endif %}
 {% endblock %}
+
