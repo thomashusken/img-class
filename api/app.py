@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, send_file
+import json
 from flask_bootstrap import Bootstrap
-from .etl import ImageParser
-from .model import return_top_5
+from etl import ImageParser
+from model import return_top_5
 from torchvision import transforms
 import io
 import base64
@@ -43,7 +44,10 @@ def upload():
         return_image = base64.b64encode(img_io.getvalue()).decode('ascii')
 
         # return_image = serve_pil_image(raw_image)
-        prediction = return_top_5(processed_image)
+        prediction_list = return_top_5(processed_image)
+        # prediction_dict = [{'class': item[0], 'probability': item[1]} for item in prediction_list]
+        # prediction_dict = dict((key, val) for k in prediction_dict for key, val in k.items())
+        prediction = json.dumps({k: v for k, v in prediction_list.items()})
     return render_template('upload.html', return_image=return_image, prediction=prediction)
 
 def serve_pil_image(pil_img):
