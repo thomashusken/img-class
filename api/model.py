@@ -24,9 +24,7 @@ def return_top_5(processed_image):
     for idx in result_idx:
         out.append((idx2label[idx], softmax[idx]))
 
-
-    result = OrderedDict(sorted(dict(out).items(), key=itemgetter(0)))
-
-#    out = sorted(out, key=lambda x: x[1], reverse=True)
+#    out = {k: v for k, v in dict(out).items()}
+    result = OrderedDict(sorted(dict(out).items(), key=itemgetter(1), reverse=True))
 
     return result
