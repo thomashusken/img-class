@@ -36,27 +36,20 @@ def upload():
          transforms.ToTensor(),
          transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ]))
+
         raw_image, processed_image = parser.load_image()
-
-        img_io = io.BytesIO()
-        raw_image.save(img_io, 'PNG', quality=100)
-        img_io.seek(0)
-        return_image = base64.b64encode(img_io.getvalue()).decode('ascii')
-
-        # return_image = serve_pil_image(raw_image)
-        prediction_list = return_top_5(processed_image)
-        # prediction_dict = [{'class': item[0], 'probability': item[1]} for item in prediction_list]
-        # prediction_dict = dict((key, val) for k in prediction_dict for key, val in k.items())
-        prediction = json.dumps({k: v for k, v in prediction_list.items()})
+        return_image = serve_pil_image(raw_image)
+        prediction_dict = return_top_5(processed_image)
+        prediction = json.dumps(prediction_dict, sort_keys=False)
     return render_template('upload.html', return_image=return_image, prediction=prediction)
 
 def serve_pil_image(pil_img):
-    output = io.BytesIO()
-    pil_img.convert('RGBA').save(output, format='PNG')
-    output.seek(0, 0)
-    output = base64.b64encode(output.getvalue())
+    img_io = io.BytesIO()
+    pil_img.save(img_io, 'PNG', quality=100)
+    img_io.seek(0)
+    return_image = base64.b64encode(img_io.getvalue()).decode('ascii')
 
-    return send_file(output, mimetype='image/png', as_attachment=False)
+    return return_image
 
 
 @app.route('/about/')
