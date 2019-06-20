@@ -11,24 +11,42 @@
       </form>
     <h1 class="mt-3">Results</h1>
     {% if prediction %}
-        <h2 class="mt-3">Image</h2>
-        <img src="data:image/png;base64,{{return_image|safe}}", height="400">
-        <h2 class="mt-3">Prediction</h2>
-        <p><div id="prediction_chart" width="300"></div></p>
+        <div id="wrapper_1">
+            <h2 class="mt-3">Image</h2>
+            <div id="container_1">
+                <img class="full-image" src="data:image/png;base64,{{return_image|safe}}" >
+            </div>
+            <h2 class="mt-3">Prediction</h2>
+            <div class="ct-chart" id="prediction-chart"></div>
+        </div>
     {% else %}
     <p>After you upload a file, your results will be shown here.</p>
     {% endif %}
-    <script>
-             var prediction_chart = c3.generate({
-                    bindto: "#prediction_chart",
-                    data: {json: JSON.parse({{ prediction|tojson|safe }}), type: 'bar'},
-                    bar: {width: {ratio: 0.5}},
-                    axis: {
-                        x: {
-                            type:'category'
-                        }
-                    },
-                });
-    </script>
+<script>
+        parsedJson = JSON.parse({{ prediction|tojson|safe }});
+        var data = {
+            labels: Object.keys(parsedJson),
+            series: [
+            Object.values(parsedJson)
+          ]
+        };
+
+        var options = {
+          width: 600,
+          height: 200,
+          horizontalBars: true,
+          reverseData: true,
+          axisY: {
+            offset: 100
+          },
+          labelOffset: {
+            y: -50
+          }
+        };
+
+        new Chartist.Bar('.ct-chart', data, options);
+
+</script>
 {% endblock %}
+
 
