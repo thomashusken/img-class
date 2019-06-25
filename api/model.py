@@ -1,12 +1,15 @@
 from torchvision import models
 import json
 import numpy as np
+import torch
 from collections import OrderedDict
 from operator import itemgetter
-
+import os
 
 def return_top_5(processed_image):
-    inception = models.inception_v3(pretrained=True)
+    # inception = models.inception_v3(pretrained=True)
+    inception = models.inception_v3()
+    inception.load_state_dict(torch.load("data/inception_v3_google-1a9a5a14.pth"))
     inception.eval()
     result = inception(processed_image)
 
