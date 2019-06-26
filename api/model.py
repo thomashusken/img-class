@@ -1,4 +1,3 @@
-from torchvision import models
 import json
 import numpy as np
 import torch
@@ -6,16 +5,8 @@ from collections import OrderedDict
 from operator import itemgetter
 import os
 
-def return_top_5(processed_image):
-    # inception = models.inception_v3(pretrained=True)
-    inception = models.inception_v3()
-    inception.load_state_dict(torch.load("data/inception_v3_google-1a9a5a14.pth"))
-    inception.eval()
-    result = inception(processed_image)
-
-    #load imagenet classes
-    class_idx = json.load(open('data/imagenet_class_index.json'))
-    idx2label = [class_idx[str(k)][1] for k in range(len(class_idx))]
+def return_top_5(processed_image, model, idx2label):
+    result = model(processed_image)
     result_idx = result.sort()[1][0][-5:]
 
     #exponentiate and get probabilities

@@ -3,7 +3,8 @@ import json
 from flask_bootstrap import Bootstrap
 from etl import ImageParser
 from model import return_top_5
-from torchvision import transforms
+from torchvision import transforms, models
+import torch
 import io
 import base64
 
@@ -13,8 +14,19 @@ def create_app():
     Bootstrap(app)
     return app
 
-
+# Create app
 app = create_app()
+
+
+# Initialise model and load weights from file
+inception = models.inception_v3()
+inception.load_state_dict(torch.load("data/inception_v3_google-1a9a5a14.pth"))
+inception.eval()
+
+#load imagenet classes
+class_idx = json.load(open('data/imagenet_class_index.json'))
+idx2label = [class_idx[str(k)][1] for k in range(len(class_idx))]
+
 
 @app.route('/test')
 def test():
@@ -39,7 +51,7 @@ def upload():
 
         raw_image, processed_image = parser.load_image()
         return_image = serve_pil_image(raw_image)
-        prediction_dict = return_top_5(processed_image)
+        prediction_dict = return_top_5(processed_image, inception, idx2label)
         prediction = json.dumps(prediction_dict, sort_keys=False)
     return render_template('upload.html', return_image=return_image, prediction=prediction)
 
